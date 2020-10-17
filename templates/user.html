@@ -28,7 +28,7 @@
                 <div class="card">
                     <a class="text-center" href="{% url 'item_buy' user_id=user.id item_id=item.item.id %}">
                         <img src="{{ item.item.image_url }}" class="card-img-top img-fluid" alt="{{ item.item.name }}"
-                              style="height: 15em; width: auto;">
+                              style="max-height: 15em; width: auto;">
                     </a>
                     <div class="card-body {% if item.stock.amount <= 0 %}text-muted{% endif %}">
                         <h6 class="card-title">{{ item.item.name }}</h6>
@@ -55,7 +55,7 @@
                     <a href="{% url 'deposit_100'  user_id=user.id  amount=deposit %}">
                         <img src="https://agdsn.me/~getraenkekasse/img/eur{{ deposit }}.png"
                              class="card-img-top img-fluid"
-                             alt="{{ deposit }}" style="height: 10em; width: auto;">
+                             alt="{{ deposit }}" class="img-fluid" style="max-width: 10em; height: auto;">
                     </a>
                     <div class="card-body">
                         <h6 class="card-title">{{ deposit }} EUR</h6>
@@ -64,24 +64,20 @@
                 <br/>
             </div>
         {% endfor %}
-        <div class="col-md-2 col-6">
-            <div class="card-title">
+       <div class="col-sm-4 col-">
+          <div class="card">
+            <div class="card-body">
               <h5>Custom amount</h5>
-            </div>
-            <div class="card">
-                <form onSubmit="return submit_money(event)">
-                  <div class="form-group">
-                    <label for="amountInputField">Amount (in €)</label>
-                    <input type="number" step="0.01" class="form-control" id="amountInputField" placehoder="Enter amount">
-                  </div>
-                </form>
-                <a onclick="deposit(100)">
-                </a>
-                <div class="card-body">
-                    <h6 class="card-title">50 EUR</h6>
+              <form onSubmit="return submit_money(event)">
+                <div class="form-group">
+                  <label for="amountInputField">Amount (in €)</label>
+                  <input type="number" step="0.01" class="form-control" id="amountInputField" placehoder="Enter amount">
                 </div>
+                <button type="submit" class="btn btn-primary">Deposit</button>
+              </form>
             </div>
-            <br/>
+          </div>
+          <br/>
         </div>
     </div>
 

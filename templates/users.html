@@ -3,6 +3,12 @@
 
 {% load division_filter %}
 
+{% block pre_content %}
+    <nav class="navbar navbar-dark bg-dark">
+        <a href="{% url 'locations' %}" class="navbar-brand">← Back</a>
+    </nav>
+{% endblock %}
+
 {% block content %}
     <br/>
     <div>
