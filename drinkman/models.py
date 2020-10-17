@@ -7,8 +7,8 @@ class User(models.Model):
     id = models.AutoField(primary_key=True)
     username = models.TextField()
     balance = models.IntegerField(default=0)
-    image_url = models.TextField(null=True)
-    email = models.EmailField(null=True)
+    image_url = models.TextField(null=True, blank=True)
+    email = models.EmailField(null=True, blank=True)
     hide_log = models.BooleanField(default=0)
 
     def __str__(self):
