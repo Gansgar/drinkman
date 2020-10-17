@@ -5,37 +5,84 @@
 
 {% block content %}
     <br/>
-
-    <div class="row">
-        {% for user in users %}
-            <div class="col-md-2 col-6">
-                <div class="card">
-                    <a href="{% url 'user_show' user_id=user.id %}">
-                        {% if user.image_url %}
-                            <img src="{{ user.image_url }}" class="card-img-top" alt="{{ user.username }}">
-                        {% else %}
-                            <img src="https://agdsn.me/~getraenkekasse/img/no_user_image.png" class="card-img-top"
-                                 alt="{{ user.username }}">
-                        {% endif %}
-                    </a>
-                    <div class="card-body">
-                        <h6 class="card-title">{{ user.username }}</h6>
-                        <p class="card-text {% if user.balance >= 0 %}text-success{% else %}text-danger{% endif %}">{{ user.get_balance }} EUR</p>
-                    </div>
-                </div>
-                <br/>
-            </div>
-        {% endfor %}
-        <div class="col-md-2 col-6">
-            <div class="card">
-                <a href="{% url 'user_new' %}">
-                    <img src="https://agdsn.me/~getraenkekasse/img/new_user.png" class="card-img-top" alt="new user">
-                </a>
-                <div class="card-body">
-                    <h6 class="card-title">New user</h6>
-                    <p class="card-text"></p>
-                </div>
-            </div>
-        </div>
+    <div>
+      <h5>Recents</h5>
+      <div class="row" id="recents">
+         <p class="col-6">Empty for now</p>
+      </div>
     </div>
+    <hr/>
+    <div>
+      <h5>All Users</h5>
+      <div class="row" id="user-container">
+          {% for user in users %}
+              <div class="col-md-2 col-6" id="{{ user.id }}">
+                  <div class="card">
+                      <a onclick="select_user('{% url 'user_show' user_id=user.id %}', {{ user.id }})">
+                          {% if user.image_url %}
+                              <img src="{{ user.image_url }}" class="card-img-top" alt="{{ user.username }}">
+                          {% else %}
+                              <img src="https://agdsn.me/~getraenkekasse/img/no_user_image.png" class="card-img-top"
+                                   alt="{{ user.username }}">
+                          {% endif %}
+                      </a>
+                      <div class="card-body">
+                          <h6 class="card-title">{{ user.username }}</h6>
+                          <p class="card-text {% if user.balance >= 0 %}text-success{% else %}text-danger{% endif %}">{{ user.get_balance }} EUR</p>
+                      </div>
+                  </div>
+                  <br/>
+              </div>
+          {% endfor %}
+          <div class="col-md-2 col-6">
+              <div class="card">
+                  <a href="{% url 'user_new' %}">
+                      <img src="https://agdsn.me/~getraenkekasse/img/new_user.png" class="card-img-top" alt="new user">
+                  </a>
+                  <div class="card-body">
+                      <h6 class="card-title">New user</h6>
+                      <p class="card-text"></p>
+                  </div>
+              </div>
+          </div>
+      </div>
+    </div>
+
+<script>
+function get_local_storage() {
+  let users = []
+  try {
+    users = JSON.parse(localStorage['recent-users'])
+    if (!(users instanceof Array))
+      users = []
+  } catch(err) {}
+  return users
+}
+
+function set_local_storage(users) {
+  localStorage['recent-users'] = JSON.stringify(users)
+}
+
+function select_user(url, id) {
+  let users = get_local_storage()
+  users.unshift(id)
+  set_local_storage(users.splice(0, 3))
+  document.location.href = url;
+}
+
+window.addEventListener('load', () => {
+  const user_list = $("#user-container");
+  const recent_list = $("#recents");
+  const users = get_local_storage()
+
+  const user_divs = users.map(x => user_list.find(`div#${x}`)).filter(x => x.length > 0)
+
+  if (user_divs.length > 0)
+    recent_list.html("")
+
+  $.each(user_divs, (i, e) => {
+    e.clone().appendTo(recent_list)
+  })
+});
+</script>
 {% endblock %}
