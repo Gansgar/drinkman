@@ -92,8 +92,8 @@ def item_buy(request, user_id, item_id):
 def deposit(request, user_id, amount):
     user = User.objects.get(id=user_id)
 
-    if helpers.deposit(user, amount * 100, get_location(request)):
-        messages.success(request, 'Successfully deposited {} EUR.'.format(amount))
+    if helpers.deposit(user, amount, get_location(request)):
+        messages.success(request, f'Successfully deposited {amount / 100:.2f} EUR.')
     else:
         messages.error(request, 'Error while depositing.')
 
@@ -101,6 +101,9 @@ def deposit(request, user_id, amount):
     qd['after_transaction'] = True
 
     return redirect_qd('user_show', qd=qd, user_id=user_id)
+
+def deposit_100(request, user_id, amount):
+    return deposit(request, user_id, amount * 100)
 
 
 def user_new(request):

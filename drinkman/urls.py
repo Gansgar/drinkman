@@ -30,6 +30,7 @@ urlpatterns = [
     path('users/new', views.user_new, name='user_new'),
     path('users/<int:user_id>/buy/<int:item_id>', views.item_buy, name='item_buy'),
     path('users/<int:user_id>/deposit/<negint:amount>', views.deposit, name='deposit'),
+    path('users/<int:user_id>/deposit_100/<negint:amount>', views.deposit_100, name='deposit_100'),
     path('users/<int:user_id>/transactions/json', views.transactions_json, name='transactions_json'),
     path('users/<int:user_id>/transfer', views.transfer, name='transfer'),
 

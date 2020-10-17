@@ -52,7 +52,7 @@
         {% for deposit in deposits %}
             <div class="col-md-2 col-6">
                 <div class="card text-center">
-                    <a href="{% url 'deposit' user_id=user.id amount=deposit %}">
+                    <a href="{% url 'deposit_100'  user_id=user.id  amount=deposit %}">
                         <img src="https://agdsn.me/~getraenkekasse/img/eur{{ deposit }}.png"
                              class="card-img-top img-fluid"
                              alt="{{ deposit }}" style="height: 10em; width: auto;">
@@ -64,6 +64,25 @@
                 <br/>
             </div>
         {% endfor %}
+        <div class="col-md-2 col-6">
+            <div class="card-title">
+              <h5>Custom amount</h5>
+            </div>
+            <div class="card">
+                <form onSubmit="return submit_money(event)">
+                  <div class="form-group">
+                    <label for="amountInputField">Amount (in €)</label>
+                    <input type="number" step="0.01" class="form-control" id="amountInputField" placehoder="Enter amount">
+                  </div>
+                </form>
+                <a onclick="deposit(100)">
+                </a>
+                <div class="card-body">
+                    <h6 class="card-title">50 EUR</h6>
+                </div>
+            </div>
+            <br/>
+        </div>
     </div>
 
     <hr/>
@@ -99,4 +118,17 @@
     {% if after_transaction %}
         <meta http-equiv="refresh" content="8; URL={% url 'users' %}">
     {% endif %}
+<script>
+function deposit(amount) {
+  let url = "{% url 'deposit' user_id=user.id amount=4321234 %}"
+  document.location.href = url.replace('4321234', amount)
+}
+
+function submit_money(event) {
+  event.preventDefault();
+  const value = $(event.srcElement).find("#amountInputField").val()
+  deposit(Math.round(value * 100))
+  return false
+}
+</script>
 {% endblock %}
