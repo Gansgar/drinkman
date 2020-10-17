@@ -1,18 +1,41 @@
-version: '2'
+version: '3.3'
 
 services:
+  db_dev:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: drinkman
+    volumes:
+#      - ../drinkman-postgres-data/:/var/lib/postgresql/data
   drinkman:
     build: .
-    command: uwsgi --ini uwsgi.ini #python manage.py runserver 0.0.0.0:8000
+    command: python manage.py runserver 0.0.0.0:80
+    restart: always
     volumes:
       - .:/code
-    ports:
-      - "8000:8000"
     environment:
       DJANGO_SECRET: SECRET
-      DB_HOST: db
+      DB_HOST: db_dev
       DB_PORT: 5432
       DB_NAME: drinkman
       DB_USER: postgres
       DB_PW: password
-    restart: always
+      DJANGO_DEV: 'false'
+      HOSTNAME: ALLOWED_HOST.localhost
+    depends_on:
+      - db_dev
+    networks:
+      - default 
+    labels:
+      - "traefik.enable=true"
+      - "traefik.=true"
+      - "traefik.http.routers.drinkman.rule=Host(`HOST`)"
+      - "traefik.http.routers.drinkman.entrypoints=web"
+
+networks:
+  default:
+    external:
+      name: 'web'
