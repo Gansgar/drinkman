@@ -38,6 +38,9 @@ class UserForm(forms.Form):
     email = forms.EmailField(label="E-Mail", required=False, widget=forms.TextInput(attrs={'class': 'form-control'}))
     image_url = forms.CharField(label="Profilbild URL (optional)", widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
 
+class DearchiveUserForm(forms.Form):
+    reactivate = forms.ModelChoiceField(User.objects.filter(archived=True).order_by('username'), label="Archived Account", widget=forms.Select(attrs={'class': 'form-control'}))
+
 
 class TransferForm(forms.Form):
     def __init__(self, *args, **kwargs):

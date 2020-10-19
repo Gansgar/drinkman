@@ -2,12 +2,12 @@ import datetime
 
 import pytz
 from django.contrib import messages
-from django.http import QueryDict, JsonResponse
+from django.http import QueryDict, JsonResponse, HttpResponseBadRequest
 from django.shortcuts import render, redirect
 from django.urls import reverse
 
 from drinkman import helpers
-from drinkman.forms import DeliveryForm, StockForm, UserForm, TransferForm
+from drinkman.forms import DeliveryForm, StockForm, UserForm, DearchiveUserForm, TransferForm
 from drinkman.helpers import increase_stock, new_transaction, get_location, redirect_qd, set_stock, receive_delivery, \
     transfer_money
 from drinkman.models import User, Item, Location, Stock, Transaction
@@ -117,7 +117,19 @@ def user_new(request):
     else:
         form = UserForm()
 
-    return render(request, 'new_user.html', {'form': form})
+    return render(request, 'new_user.html', {'form': form, 'dearchive_form': DearchiveUserForm()})
+
+def reactivate_user(request):
+    if request.method == 'POST':
+        form = DearchiveUserForm(request.POST)
+        if form.is_valid():
+            user = form.cleaned_data['reactivate']
+            new_transaction(f"Reactivated user: {user}", user)
+            user.archived = False
+            user.save()
+            messages.success(request, "Changes saved.")
+            return redirect('user_show', user_id=user.id)
+    raise HttpResponseBadRequest("Form isn't used correctly")
 
 
 def user_edit(request, user_id):

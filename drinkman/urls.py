@@ -28,6 +28,7 @@ urlpatterns = [
     path('users/<int:user_id>', views.user_show, name='user_show'),
     path('users/<int:user_id>/edit', views.user_edit, name='user_edit'),
     path('users/new', views.user_new, name='user_new'),
+    path('users/reactivate_user', views.reactivate_user, name='reactivate_user'),
     path('users/<int:user_id>/buy/<int:item_id>', views.item_buy, name='item_buy'),
     path('users/<int:user_id>/deposit/<negint:amount>', views.deposit, name='deposit'),
     path('users/<int:user_id>/deposit_100/<negint:amount>', views.deposit_100, name='deposit_100'),
