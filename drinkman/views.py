@@ -20,7 +20,7 @@ def index(request):
 def users(request):
     location = request.GET.get('location')
 
-    context = {'users': User.objects.order_by('-balance').all()}
+    context = {'users': User.objects.filter(archived=False).order_by('-balance').all()}
 
     response = render(request, 'users.html', context)
 

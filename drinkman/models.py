@@ -10,6 +10,7 @@ class User(models.Model):
     image_url = models.TextField(null=True, blank=True)
     email = models.EmailField(null=True, blank=True)
     hide_log = models.BooleanField(default=0)
+    archived = models.BooleanField(default=0)
 
     def __str__(self):
         return self.username
